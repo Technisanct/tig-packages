@@ -1,2 +1,2 @@
-# tig-s3
-AWS S3 interface for integrite buckets
+# tig-packages
+Mono repo for all technisanct python packages.

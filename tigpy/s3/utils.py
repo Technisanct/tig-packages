@@ -98,7 +98,7 @@ class Utils():
 		@rtype: tuple
 		"""
 
-		is_success, error = (True, '')
+		is_success, error = (True, None)
 		resource = self.get_resource()
 		bucket_name, key = self._get_bucket_and_prefix(path)
 		try:
@@ -123,7 +123,7 @@ class Utils():
 		@rtype: tuple
 		"""
 
-		is_success, error = (True, '')
+		is_success, error = (True, None)
 		try:
 			resource = self.get_resource()
 			source_bucket, source_key = self._get_bucket_and_prefix(source_path)
@@ -147,7 +147,7 @@ class Utils():
 		@return: is success bool value and error message
 		@rtype: tuple
 		"""
-		is_success, error = (True, '')
+		is_success, error = (True, None)
 		try:
 			resource = self.get_resource()
 			bucket_name, key = self._get_bucket_and_prefix(path)

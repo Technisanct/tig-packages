@@ -167,16 +167,12 @@ class Utils():
 		@return: list of file path
 		@rtype: list
 		"""
-		client = self.get_client()
-		bucket_name, key = self._get_bucket_and_prefix(path)
-
-		# get all the files using list_objects_v2, pagination limit of 1000 is handled
-		response = client.list_objects_v2(Bucket=bucket_name, Prefix=key)
-		files = [i['Key'] for i in response['Contents']]
-		while 'NextContinuationToken' in response:
-			response = client.list_objects_v2(Bucket=bucket_name, Prefix=key,
-			                                          ContinuationToken=response['NextContinuationToken'])
-		files.extend([i['Key'] for i in response['Contents']])
-		if file_filter:
-			files = [_file for _file in files if file_filter in _file]
-		return files
+		resource = self.get_resource()
+		bucket_name, prefix = self._get_bucket_and_prefix(path)
+		bucket = resource.Bucket(bucket_name)
+		for object_summary in bucket.objects.filter(Prefix=prefix):
+			if file_filter:
+				if object_summary.key.endswith(file_filter):
+					yield object_summary.key
+			else:
+				yield object_summary.key

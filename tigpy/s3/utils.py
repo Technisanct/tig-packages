@@ -157,13 +157,15 @@ class Utils():
 		finally:
 			return is_success, error
 
-	def get_files_in_directory(self, path, file_filter=None):
+	def get_files_in_directory(self, path, file_filter=None, contains_filter=None):
 		"""
 		return files in an s3 directory
 		@param path: s3 path
 		@type path: string
 		@param file_filter: filter text
 		@type file_filter: string
+		@param contains_filter: filter text
+		@type contains_filter: string
 		@return: list of file path
 		@rtype: list
 		"""
@@ -171,8 +173,14 @@ class Utils():
 		bucket_name, prefix = self._get_bucket_and_prefix(path)
 		bucket = resource.Bucket(bucket_name)
 		for object_summary in bucket.objects.filter(Prefix=prefix):
-			if file_filter:
+			if file_filter and contains_filter:
+				if object_summary.key.endswith(file_filter) and contains_filter in object_summary.key:
+					yield object_summary.key
+			elif file_filter:
 				if object_summary.key.endswith(file_filter):
+					yield object_summary.key
+			elif contains_filter:
+				if contains_filter in object_summary.key:
 					yield object_summary.key
 			else:
 				yield object_summary.key
